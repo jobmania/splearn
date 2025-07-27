@@ -19,11 +19,15 @@ public class Member {
 
     private MemberStatus status;
 
-    public Member(@Nullable String email, String nickname, String passwordHash) {
+    private Member(@Nullable String email, String nickname, String passwordHash) {
         this.email = Objects.requireNonNull(email);
         this.nickname = Objects.requireNonNull(nickname);
         this.passwordHash = Objects.requireNonNull(passwordHash);
         this.status = MemberStatus.PENDING;
+    }
+
+    public static Member create(String email, String nickname,String password, PasswordEncoder passwordEncoder) {
+        return new Member(email, nickname, passwordEncoder.encode(password));
     }
 
 
