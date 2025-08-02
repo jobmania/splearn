@@ -1,6 +1,5 @@
 package tobyspring.splearn.domain;
 
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -19,7 +18,7 @@ public class Member {
 
     private MemberStatus status;
 
-    private Member(@Nullable String email, String nickname, String passwordHash) {
+    private Member(String email, String nickname, String passwordHash) {
         this.email = Objects.requireNonNull(email);
         this.nickname = Objects.requireNonNull(nickname);
         this.passwordHash = Objects.requireNonNull(passwordHash);
@@ -40,5 +39,22 @@ public class Member {
     public void deActivate() {
         state(status == MemberStatus.ACTIVE, "ACTIVE 상태가 아닙니다");
         this.status = MemberStatus.DEACTIVATED;
+    }
+
+    public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password,passwordHash);
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = Objects.requireNonNull(nickname
+        );
+    }
+
+    public void changePassword(String password, PasswordEncoder passwordEncoder) {
+        passwordHash = passwordEncoder.encode(Objects.requireNonNull(password));
+    }
+
+    public boolean isActive() {
+        return status == MemberStatus.ACTIVE;
     }
 }
