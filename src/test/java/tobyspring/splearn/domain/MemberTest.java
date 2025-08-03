@@ -24,7 +24,7 @@ class MemberTest {
             }
         };
 
-        member = Member.create(new MemberCreateRequest("tobay@abc","Toby","secret"), passwordEncoder);
+        member = Member.create(new MemberCreateRequest("tobay@abc.com","Toby","secret"), passwordEncoder);
 
     }
 
@@ -98,6 +98,16 @@ class MemberTest {
         assertThat(member.isActive()).isTrue();
         member.deActivate();
         assertThat(member.isActive()).isFalse();
+
+    }
+
+    @Test
+    void inValidEmail(){
+        assertThatThrownBy(() ->{
+            Member.create(new MemberCreateRequest("ionavlindEmailkk", "Toby", "secret"), passwordEncoder);
+        }).isInstanceOf(IllegalArgumentException.class);
+
+        Member.create(new MemberCreateRequest("abc@abc.com", "Toby", "secret"), passwordEncoder);
 
     }
 }
