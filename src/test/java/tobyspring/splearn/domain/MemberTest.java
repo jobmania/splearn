@@ -24,7 +24,8 @@ class MemberTest {
             }
         };
 
-        member = Member.create("abc@splearn.app", "Toby", "secret", passwordEncoder);
+        member = Member.create(new MemberCreateRequest("tobay@abc","Toby","secret"), passwordEncoder);
+
     }
 
 
