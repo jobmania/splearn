@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static tobyspring.splearn.domain.MemberFixture.createMemberRegisterRequest;
+import static tobyspring.splearn.domain.MemberFixture.createPasswordEncoder;
 
 class MemberTest {
     Member member; // 이 멤버 변수는 테스트 메소드 실행마다 매번 초기화 !
@@ -12,25 +14,17 @@ class MemberTest {
 
     @BeforeEach
     void setUp() {
-        passwordEncoder = new PasswordEncoder() {
-            @Override
-            public String encode(String password) {
-                return password.toUpperCase();
-            }
+        passwordEncoder = createPasswordEncoder();
 
-            @Override
-            public boolean matches(String password, String passwordHash) {
-                return encode(password).equals(passwordHash);
-            }
-        };
-
-        member = Member.create(new MemberCreateRequest("tobay@abc.com","Toby","secret"), passwordEncoder);
+        member = Member.register(createMemberRegisterRequest(), passwordEncoder);
 
     }
 
 
+
+
     @Test
-    void createMember(){
+    void registerMember(){
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
     }
 
@@ -104,10 +98,12 @@ class MemberTest {
     @Test
     void inValidEmail(){
         assertThatThrownBy(() ->{
-            Member.create(new MemberCreateRequest("ionavlindEmailkk", "Toby", "secret"), passwordEncoder);
+            Member.register(createMemberRegisterRequest("invalid Email"), passwordEncoder);
         }).isInstanceOf(IllegalArgumentException.class);
 
-        Member.create(new MemberCreateRequest("abc@abc.com", "Toby", "secret"), passwordEncoder);
+        Member.register(createMemberRegisterRequest(), passwordEncoder);
 
     }
+
+
 }
